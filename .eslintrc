@@ -1,0 +1,19 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "react/jsx-filename-extension": 0,
+    "react/forbid-prop-types": 0,
+    "no-nested-ternary": 0,
+    "no-underscore-dangle": 0,
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  }
+}
