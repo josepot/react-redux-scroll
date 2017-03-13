@@ -1,4 +1,7 @@
 {
   "presets": ["es2015", "react"],
-  "plugins": ["transform-exponentiation-operator"]
+  "plugins": [
+    "transform-exponentiation-operator",
+    "transform-object-rest-spread"
+  ]
 }

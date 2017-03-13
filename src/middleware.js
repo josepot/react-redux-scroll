@@ -4,6 +4,7 @@ import CustomWeakSet from './utils/weakset';
 let dispatch = null;
 const idsManager = new IdsManager();
 const subscriptions = {};
+const isProd = process.env.NODE_ENV === 'production';
 
 const clearSubscription = (id) => {
   if (subscriptions[id].cancelScroll) subscriptions[id].cancelScroll();
@@ -11,34 +12,43 @@ const clearSubscription = (id) => {
   subscriptions[id] = undefined;
 };
 
-export const subscribe = (check, scroll, context, options, onEnd) => {
+export const subscribe = (check, scroll, context, onEnd, scrollOptions) => {
   const subscriptionId = idsManager.getNewId();
-  subscriptions[subscriptionId] = { check, scroll, context, options, onEnd };
+  subscriptions[subscriptionId] = {
+    check,
+    scroll,
+    context,
+    onEnd,
+    scrollOptions,
+  };
   return () => clearSubscription(subscriptionId);
 };
 
 const emit = (action, state, prevState) => {
   const takenContexts = new CustomWeakSet();
   Object.keys(subscriptions)
-    .filter(key => subscriptions[key].check(action, state, prevState))
-    .forEach((winnerKey) => {
-      const winner = subscriptions[winnerKey];
-      const { context } = winner;
-      if (takenContexts.has(context) && process.env.NODE_ENV !== 'production') {
+    .map(key => ({
+      key,
+      options: subscriptions[key].check(action, state, prevState),
+    }))
+    .filter(({ options }) => !!options)
+    .forEach(({ key, options }) => {
+      const subscription = subscriptions[key];
+      if (takenContexts.has(subscription.context) && !isProd) {
         console.warn( // eslint-disable-line no-console
           'A component was prevented from scrolling as a result of the ' +
           'lastest action because another scroll was triggered ' +
           'for the same context.'
         );
       } else {
-        takenContexts.add(context);
-        winner.cancelScroll = winner.scroll(
-          context,
+        takenContexts.add(subscription.context);
+        subscription.cancelScroll = subscription.scroll(
+          subscription.context,
           (canceled) => {
-            winner.cancelScroll = undefined;
-            winner.onEnd(dispatch, canceled);
+            subscription.cancelScroll = undefined;
+            (options.onEnd || subscription.onEnd)(dispatch, canceled);
           },
-          winner.options
+          { ...(subscription.scrollOptions), ...(options.scrollOptions || {}) }
         );
       }
     });

@@ -18,9 +18,11 @@ const getMatcher = (pattern) => {
 
 export default (
   pattern,
-  options = {},
-  onEnd = Function.prototype,
-  excludedProps = []
+  {
+    excludedProps = [],
+    onEnd = Function.prototype,
+    scrollOptions = {},
+  } = {}
 ) => (Component) => {
   const matcher = getMatcher(pattern);
 
@@ -30,7 +32,8 @@ export default (
       this.scroll = this.scroll.bind(this);
       this.check = this.check.bind(this);
       this.state = {
-        subscription: subscribe(this.check, this.scroll, window, options, onEnd),
+        subscription: subscribe(
+          this.check, this.scroll, window, onEnd, scrollOptions),
       };
     }
 
@@ -39,8 +42,7 @@ export default (
     }
 
     check(action, state, prevState) {
-      return matcher(action, this.props, state, prevState) ?
-        this.scroll.bind(this) : undefined;
+      return matcher(action, this.props, state, prevState);
     }
 
     scroll(...args) {

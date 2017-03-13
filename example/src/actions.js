@@ -1,5 +1,5 @@
-export const JUMP_TO = 'JUMP_TO';
-export const JUMP_TO_LAST = 'JUMP_TO_LAST';
+export const JUMP_TO_PARAGRAPH = 'JUMP_TO_PARAGRAPH';
+export const JUMP_TO_HEADER = 'JUMP_TO_HEADER';
 
-export const jumpTo = idx => ({ type: JUMP_TO, payload: idx });
-export const jumpToLast = () => ({ type: JUMP_TO_LAST });
+export const jumpToParagraph = id => ({ type: JUMP_TO_PARAGRAPH, payload: id });
+export const jumpToHeader = () => ({ type: JUMP_TO_HEADER });
