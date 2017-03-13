@@ -19,7 +19,8 @@ const getMatcher = (pattern) => {
 export default (
   pattern,
   options = {},
-  onEnd = Function.prototype
+  onEnd = Function.prototype,
+  excludedProps = []
 ) => (Component) => {
   const matcher = getMatcher(pattern);
 
@@ -51,7 +52,12 @@ export default (
     }
 
     render() {
-      return <Component {...this.props} />;
+      const newProps = Object
+        .keys(this.props)
+        // eslint-disable-next-line no-param-reassign
+        .reduce((res, key) => { res[key] = this.props[key]; return res; }, {});
+      excludedProps.forEach(key => delete newProps[key]);
+      return <Component {...newProps} />;
     }
   };
 };
