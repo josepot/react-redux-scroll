@@ -38,7 +38,7 @@ export default (
     }
 
     check(action, state, prevState) {
-      return matcher(action, state, this.props, prevState) ?
+      return matcher(action, this.props, state, prevState) ?
         this.scroll.bind(this) : undefined;
     }
 
