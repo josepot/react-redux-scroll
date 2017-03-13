@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import { JUMP_TO, JUMP_TO_LAST } from './actions';
 
-const Header = scrollToWhen(JUMP_TO, undefined, { duration: 1000 })(() =>
+const Header = scrollToWhen(JUMP_TO, { duration: 1000 })(() =>
   <div className="App-header">
     <img src={logo} className="App-logo" alt="logo" />
     <h2>Welcome to React</h2>
@@ -13,7 +13,6 @@ const Header = scrollToWhen(JUMP_TO, undefined, { duration: 1000 })(() =>
 
 const LastParagraph = scrollToWhen(
   JUMP_TO_LAST,
-  undefined,
   { duration: 3000, easingFunction: 'EASE_IN_OUT_CUBIC', yAlignment: 'BOTTOM' },
   (dispatch, cancelled) => dispatch({ type: 'SCROLL_FINISHED', cancelled })
 )('p');

@@ -1,7 +1,6 @@
-import IdsManager from './ids-manager';
+import CustomWeakMap from './utils/weakmap';
 
-const idsManager = new IdsManager();
-const onGoingScrolls = {};
+const onGoingScrolls = new CustomWeakMap();
 
 // Thanks to:
 // http://blog.greweb.fr/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/
@@ -46,26 +45,18 @@ const cancelAnimationFrame = window.cancelAnimationFrame ||
   window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
   (id => window.clearTimeout(id));
 
-const findUsedIdByContext = context => Object.keys(onGoingScrolls)
-  .find(key => onGoingScrolls[key].context === context);
-
-const clearEntry = (id, isCancellation) => {
-  idsManager.releaseId(id);
-  if (isCancellation) cancelAnimationFrame(onGoingScrolls[id].animationId);
-  onGoingScrolls[id].onEnd(isCancellation);
-  delete onGoingScrolls[id];
-};
-
-const clearCompetingScrolls = (context) => {
-  const id = findUsedIdByContext(context);
-  if (id) clearEntry(id, true);
+const clearEntry = (context, isCancellation) => {
+  const { animationId, onEnd } = onGoingScrolls.get(context);
+  if (isCancellation) cancelAnimationFrame(animationId);
+  onEnd(isCancellation);
+  onGoingScrolls.delete(context);
 };
 
 const getEntity = (context, onEnd) => {
-  clearCompetingScrolls(context);
-  const id = idsManager.getNewId();
-  onGoingScrolls[id] = { id, context, onEnd };
-  return onGoingScrolls[id];
+  if (onGoingScrolls.has(context)) clearEntry(context, true);
+  const entity = { onEnd };
+  onGoingScrolls.set(context, entity);
+  return entity;
 };
 
 export default (
@@ -125,12 +116,12 @@ export default (
       getCurrentPosition(from, to, start, duration, movementFn);
     scrollTo(currentPosition.x, currentPosition.y);
     if (currentPosition.x === to.x && currentPosition.y === to.y) {
-      clearEntry(entity.id, false);
+      clearEntry(context, false);
     } else {
       entity.animationId = requestAnimationFrame(scroll);
     }
   };
   scroll();
 
-  return () => clearEntry(entity.id, true);
+  return () => clearEntry(context, true);
 };

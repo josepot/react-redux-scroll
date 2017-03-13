@@ -1,4 +1,5 @@
-import IdsManager from './ids-manager';
+import IdsManager from './utils/ids-manager';
+import CustomWeakSet from './utils/weakset';
 
 let dispatch = null;
 const idsManager = new IdsManager();
@@ -17,14 +18,14 @@ export const subscribe = (check, scroll, context, options, onEnd) => {
 };
 
 const emit = (action, state, prevState) => {
-  const takenContexts = new WeakSet();
+  const takenContexts = new CustomWeakSet();
   Object.keys(subscriptions)
     .filter(key => subscriptions[key].check(action, state, prevState))
     .forEach((winnerKey) => {
       const winner = subscriptions[winnerKey];
       const { context } = winner;
       if (takenContexts.has(context) && process.env.NODE_ENV !== 'production') {
-        console.warning( // eslint-disable-line no-console
+        console.warn( // eslint-disable-line no-console
           'A component was prevented from scrolling as a result of the ' +
           'lastest action because another scroll was triggered ' +
           'for the same context.'
