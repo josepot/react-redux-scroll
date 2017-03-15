@@ -1,13 +1,13 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createLogger from 'redux-logger';
-import { scrollMiddleware } from '../../lib';
+import { createScrollMiddleware } from '../../lib';
 
 const devMode = process.env.NODE_ENV !== 'production';
 
 const loggerMiddleware = createLogger();
 
 const getMiddlewares = () => {
-  const common = [scrollMiddleware];
+  const common = [createScrollMiddleware()];
   const dev = [loggerMiddleware];
   const prod = [];
   return [...common, ...(devMode ? dev : prod)];
