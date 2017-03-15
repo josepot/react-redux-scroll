@@ -73,29 +73,31 @@ export default (
   } = {}
 ) => {
   const entity = getEntity(context, onEnd);
-  const from = {
-    x: context.scrollLeft || window.pageXOffset,
-    y: context.scrollTop || window.pageYOffset,
-  };
+
+  const from = context === window ?
+    { x: window.pageXOffset, y: window.pageYOffset } :
+    { x: context.scrollLeft, y: context.scrollTop };
+
+  const contextRect = context === window ? {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    left: 0,
+    top: 0,
+  } : context.getBoundingClientRect();
+
   const targetRect = target.getBoundingClientRect();
-  const contextWidth = context === window ?
-    window.innerWidth :
-    context.getBoundingClientRect().width;
-  const contextHeight = context === window ?
-    window.innerHeight :
-    context.getBoundingClientRect().height;
 
   const to = {
-    x: (
+    x: ((
       xAlignment === 'LEFT'  ? targetRect.left : // eslint-disable-line no-multi-spaces
-      xAlignment === 'RIGHT' ? targetRect.right - contextWidth :
-                               0
-    ) + from.x + xMargin,
-    y: (
+      xAlignment === 'RIGHT' ? targetRect.right - contextRect.width :
+                               contextRect.left
+    ) + from.x + xMargin) - contextRect.left,
+    y: ((
       yAlignment === 'TOP'    ? targetRect.top : // eslint-disable-line no-multi-spaces
-      yAlignment === 'BOTTOM' ? targetRect.bottom - contextHeight :
-                                0
-    ) + from.y + yMargin,
+      yAlignment === 'BOTTOM' ? targetRect.bottom - contextRect.height :
+                                contextRect.top
+    ) + from.y + yMargin) - contextRect.top,
   };
 
   const scrollTo = context === window ?
@@ -122,6 +124,5 @@ export default (
     }
   };
   scroll();
-
   return () => clearEntry(context, true);
 };

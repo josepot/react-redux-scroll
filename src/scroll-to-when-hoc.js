@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import scrollTo from './scroll';
 import { subscribe } from './middleware';
 
 const getMatcher = (pattern) => {
@@ -8,7 +7,13 @@ const getMatcher = (pattern) => {
   if (patternType === 'string') return ({ type }) => type === pattern;
   if (patternType === 'function') return pattern;
   if (Array.isArray(pattern)) {
-    return action => pattern.some(p => getMatcher(p)(action));
+    return (...args) => {
+      let val;
+      for (let i = 0; !val && i < pattern.length; i += 1) {
+        val = getMatcher(pattern[i])(...args);
+      }
+      return val;
+    };
   }
 
   throw new Error(
@@ -26,14 +31,15 @@ export default (
 ) => (Component) => {
   const matcher = getMatcher(pattern);
 
-  return class Scrollable extends React.Component {
-    constructor(props) {
-      super(props);
-      this.scroll = this.scroll.bind(this);
+  class Scrollable extends React.Component {
+    constructor(props, context) {
+      super(props, context);
+      const { getScrollContext = () => window } = context;
       this.check = this.check.bind(this);
+      this.getDomEl = this.getDomEl.bind(this);
       this.state = {
         subscription: subscribe(
-          this.check, this.scroll, window, onEnd, scrollOptions),
+          this.check, this.getDomEl, getScrollContext(), onEnd, scrollOptions),
       };
     }
 
@@ -41,16 +47,12 @@ export default (
       this.state.subscription();
     }
 
-    check(action, state, prevState) {
-      return matcher(action, this.props, state, prevState);
+    getDomEl() {
+      return ReactDOM.findDOMNode(this); // eslint-disable-line react/no-find-dom-node
     }
 
-    scroll(...args) {
-      return scrollTo(
-        // eslint-disable-next-line react/no-find-dom-node
-        ReactDOM.findDOMNode(this),
-        ...args
-      );
+    check(action, state, prevState) {
+      return matcher(action, this.props, state, prevState);
     }
 
     render() {
@@ -61,5 +63,9 @@ export default (
       excludedProps.forEach(key => delete newProps[key]);
       return <Component {...newProps} />;
     }
-  };
+  }
+
+  Scrollable.contextTypes = { getScrollContext: PropTypes.func };
+
+  return Scrollable;
 };

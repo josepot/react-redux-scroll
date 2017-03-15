@@ -1,5 +1,6 @@
 import IdsManager from './utils/ids-manager';
 import CustomWeakSet from './utils/weakset';
+import scrollTo from './scroll';
 
 let dispatch = null;
 const idsManager = new IdsManager();
@@ -9,14 +10,14 @@ const isProd = process.env.NODE_ENV === 'production';
 const clearSubscription = (id) => {
   if (subscriptions[id].cancelScroll) subscriptions[id].cancelScroll();
   idsManager.releaseId(id);
-  subscriptions[id] = undefined;
+  delete subscriptions[id];
 };
 
-export const subscribe = (check, scroll, context, onEnd, scrollOptions) => {
+export const subscribe = (check, getDomEl, context, onEnd, scrollOptions) => {
   const subscriptionId = idsManager.getNewId();
   subscriptions[subscriptionId] = {
     check,
-    scroll,
+    getDomEl,
     context,
     onEnd,
     scrollOptions,
@@ -42,7 +43,8 @@ const emit = (action, state, prevState) => {
         );
       } else {
         takenContexts.add(subscription.context);
-        subscription.cancelScroll = subscription.scroll(
+        subscription.cancelScroll = scrollTo(
+          subscription.getDomEl(),
           subscription.context,
           (canceled) => {
             subscription.cancelScroll = undefined;
@@ -54,7 +56,7 @@ const emit = (action, state, prevState) => {
     });
 };
 
-export default (store) => {
+export default () => (store) => {
   dispatch = store.dispatch.bind(store);
   return next => (action) => {
     const prevState = store.getState();

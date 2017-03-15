@@ -1,4 +1,5 @@
-import scrollMiddleware from './middleware';
+import createScrollMiddleware from './middleware';
 import scrollToWhen from './scroll-to-when-hoc';
+import scrollableArea from './scrollable-area-hoc';
 
-export { scrollMiddleware, scrollToWhen };
+export { createScrollMiddleware, scrollableArea, scrollToWhen };
