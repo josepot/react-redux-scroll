@@ -1,4 +1,4 @@
-# React-Redux-Scroll
+# React Redux Scroll
 
 Scroll management library for react-redux apps.
 
@@ -60,8 +60,8 @@ export default configureStore;
 
 Imagine that you have a `ErrorMessages` component that's used for
 displaying a bunch of form errors. Now, lets say that we want to trigger
-a smooth scroll to that component when the action type `ERRORS_REPORTED`
-gets dispatched.
+a smooth scroll to the DOM element of that component when the action
+type `ERRORS_REPORTED` gets dispatched.
 
 ```js
 import React from 'react';
@@ -80,10 +80,9 @@ export default () =>
   </div>;
 ```
 
-Now, lets pretend that we want the `FancyForm` and the `ErrorMessages`
-to render inside an `overflow: scroll` element. Therefore we want
-the scroll to happen for the "overflowed" element, instead of the `window`.
-This is how to do it:
+Now, lets pretend that the `FancyForm` and the `ErrorMessages` are inside
+an `overflow: scroll` element. Therefore we want the scroll to happen for
+that "overflowed" element, instead of the `window`:
 
 ```js
 import React from 'react';
@@ -145,9 +144,9 @@ export default Paragraphs;
 
 ### Complete Examples
 
-There are 2 complete examples in this repo:
+There are 2 complete examples in this repo that take advantage of all the different usages of the API:
 
-- [paragraphs](https://github.com/josepot/react-redux-scroll/tree/master/examples/paragraphs): It's a pretty basic one based on the above code.
+- [paragraphs](https://github.com/josepot/react-redux-scroll/tree/master/examples/paragraphs): It's a pretty basic one based on the code above.
 - [lottery](https://github.com/josepot/react-redux-scroll/tree/master/examples/lottery): This one is more advanced: it demonstarates how to use multiple ScrollAreas and having more than one scroll happneing at the same time.
 
 In order to try the examples, clone this repo, go the example folder that you want to try and do an `npm install`, `npm start`. For example:
