@@ -23,12 +23,14 @@ const getMatcher = (pattern) => {
 
 export default (
   pattern,
-  {
-    excludedProps = [],
-    onEnd = Function.prototype,
-    scrollOptions = {},
-  } = {}
+  onEnd,
+  scrollOptions,
+  excludedProps,
 ) => (Component) => {
+  onEnd = onEnd || Function.prototype; // eslint-disable-line no-param-reassign
+  scrollOptions = scrollOptions || {}; // eslint-disable-line no-param-reassign
+  excludedProps = excludedProps || []; // eslint-disable-line no-param-reassign
+
   const matcher = getMatcher(pattern);
 
   class Scrollable extends React.Component {

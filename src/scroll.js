@@ -4,7 +4,7 @@ const onGoingScrolls = new CustomWeakMap();
 
 // Thanks to:
 // http://blog.greweb.fr/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/
-const EASING_FUNCTIONS = {
+const TIMING_FUNCTIONS = {
   LINEAR: t => t,
   EASE_IN_QUAD: t => t * t,
   EASE_OUT_QUAD: t => t * (2 - t),
@@ -65,7 +65,7 @@ export default (
   onEnd = () => null,
   {
     duration = 500,
-    easingFunction = 'EASE_IN_OUT_CUBIC',
+    transitionTimingFunction = 'EASE_IN_QUAD',
     xAlignment = null,
     xMargin = 0,
     yAlignment = 'TOP',
@@ -107,15 +107,18 @@ export default (
       context.scrollTop = y; // eslint-disable-line no-param-reassign
     };
 
-  const movementFn = typeof easingFunction === 'function' ?
-    easingFunction :
-    (EASING_FUNCTIONS[easingFunction] || EASING_FUNCTIONS.EASE_IN_OUT_CUBIC);
+  const timingFn = typeof transitionTimingFunction === 'function' ?
+    transitionTimingFunction :
+    (
+      TIMING_FUNCTIONS[transitionTimingFunction] ||
+      TIMING_FUNCTIONS.EASE_IN_QUAD
+    );
 
   const start = Date.now();
 
   const scroll = () => {
     const currentPosition =
-      getCurrentPosition(from, to, start, duration, movementFn);
+      getCurrentPosition(from, to, start, duration, timingFn);
     scrollTo(currentPosition.x, currentPosition.y);
     if (currentPosition.x === to.x && currentPosition.y === to.y) {
       clearEntry(context, false);
