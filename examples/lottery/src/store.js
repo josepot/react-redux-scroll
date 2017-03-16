@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createLogger from 'redux-logger';
-import { createScrollMiddleware } from '../../../lib';
+import { createScrollMiddleware } from 'react-redux-scroll';
 
 const devMode = process.env.NODE_ENV !== 'production';
 

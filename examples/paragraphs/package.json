@@ -1,5 +1,5 @@
 {
-  "name": "example",
+  "name": "paragraphs",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -8,8 +8,11 @@
   "dependencies": {
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-geomicons": "^2.1.0",
     "react-redux": "^5.0.3",
-    "react-redux-scroll": "^0.0.2",
+    "react-redux-scroll": "^0.0.5",
+    "rebass": "^0.3.4",
+    "recompose": "^0.22.0",
     "redux": "^3.6.0",
     "redux-logger": "^2.8.2"
   },

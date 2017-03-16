@@ -4174,9 +4174,9 @@ react-geomicons@^2.1.0:
   dependencies:
     geomicons-open "^3.0.0-beta.2"
 
-react-redux-scroll@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/react-redux-scroll/-/react-redux-scroll-0.0.2.tgz#a1d18bde44df78d080a41ad6d3b40b712fa95b50"
+react-redux-scroll@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-redux-scroll/-/react-redux-scroll-0.0.5.tgz#0c04e59713454f23a39751447e4099cb197081ae"
 
 react-redux@^5.0.3:
   version "5.0.3"

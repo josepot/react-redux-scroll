@@ -1,4 +1,5 @@
-import { scrollToWhen } from '../../../../../lib';
+import { scrollToWhen } from 'react-redux-scroll';
+
 import LoteryNumber from './LotteryNumber';
 import {
   onDisplayDigit,
@@ -7,21 +8,40 @@ import {
   RESET,
 } from '../../actions';
 
-const onEnd = (dispatch, canceled) => {
+const SCROLL_TO_NUMBER_DURATION = 2000;
+const RESET_DURATION = 0;
+
+const isNumberSelected = (
+  { type, payload },
+  { positionNumber, number },
+  newState
+) => (
+  number !== null &&
+  [NUMBER_GENERATED, DIGIT_DISPLAYED].includes(type) &&
+  positionNumber === newState.digitsDisplayed &&
+  number.toString(10) === newState.winner.substr(positionNumber, 1)
+);
+
+const isReset = ({ type }, { number }) => (type === RESET && number === null);
+
+const onEndScrollingToNumber = (dispatch, canceled) => {
   if (!canceled) dispatch(onDisplayDigit());
 };
 
-export default scrollToWhen([
-  ({ type, payload }, { positionNumber, number }, newState) => (
-    [NUMBER_GENERATED, DIGIT_DISPLAYED].includes(type) &&
-    positionNumber === newState.digitsDisplayed &&
-    `${number}` === newState.winner.substr(positionNumber, 1) ?
-      { onEnd, scrollOptions: { duration: 2000 } } :
-      undefined
-  ),
-  ({ type }, { number }) => (type === RESET && number === null ?
-    { scrollOptions: { duration: 0 } } : undefined
-  ),
-], {
-  scrollOptions: { xAlignment: 'LEFT', yAlignment: null },
-})(LoteryNumber);
+const returnOptionsWhen = ([conditionFn, options]) => (...args) => (
+  conditionFn(...args) ? options : null
+);
+
+export default scrollToWhen(
+  [
+    [isNumberSelected, {
+      onEnd: onEndScrollingToNumber,
+      scrollOptions: { duration: SCROLL_TO_NUMBER_DURATION },
+    }],
+    [isReset, {
+      scrollOptions: { duration: RESET_DURATION },
+    }],
+  ].map(returnOptionsWhen),
+  null,
+  { xAlignment: 'LEFT', yAlignment: null }
+)(LoteryNumber);

@@ -1,11 +1,12 @@
-import { scrollToWhen } from '../../../../../lib';
+import { scrollToWhen } from 'react-redux-scroll';
+
 import { DIGIT_DISPLAYED, RESET, NUMBER_GENERATED } from '../../actions';
 import Slider from './Slider';
 
-const NUMBER_GENERATED_SCROLL_DURATION = 500;
+const SCROLL_TO_SLIDER_ROW_DURATION = 500;
 const RESET_SCROLL_DURATION = 0;
 
-const isNumberGeneratedForSlider = ({ type }, { positionNumber }, newState) => (
+const isNumberGeneratedForRow = ({ type }, { positionNumber }, newState) => (
   [NUMBER_GENERATED, DIGIT_DISPLAYED].includes(type) &&
   positionNumber === newState.digitsDisplayed
 );
@@ -19,10 +20,9 @@ const returnDurationWhen = ([conditionFn, duration]) => (...args) => (
 
 export default scrollToWhen(
   [
-    [isNumberGeneratedForSlider, NUMBER_GENERATED_SCROLL_DURATION],
+    [isNumberGeneratedForRow, SCROLL_TO_SLIDER_ROW_DURATION],
     [isResetForFirstSlider, RESET_SCROLL_DURATION],
   ].map(returnDurationWhen),
-  {
-    scrollOptions: { yMargin: -20 },
-  }
+  null,
+  { yMargin: -20 }
 )(Slider);
