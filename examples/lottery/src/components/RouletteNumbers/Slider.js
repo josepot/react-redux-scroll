@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Block } from 'rebass';
+import { scrollableArea } from 'react-redux-scroll';
 import ScrollableLotteryNumber from './ScrollableLotteryNumber';
-import { scrollableArea } from '../../../../../lib';
 
 const ScrollableArea = scrollableArea(Block);
 const SLIDE_SIZE = '200px';

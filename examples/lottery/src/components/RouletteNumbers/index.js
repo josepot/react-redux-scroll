@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 import { Block } from 'rebass';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import { scrollableArea } from 'react-redux-scroll';
 import ScrollableSlider from './ScrollableSlider';
-import { scrollableArea } from '../../../../../lib';
 
 const getRange = (start, end) => {
   const result = [];
