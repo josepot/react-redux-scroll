@@ -1,6 +1,6 @@
 {
   "name": "react-redux-scroll",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "./lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -62,8 +62,5 @@
     "react": "^0.14.0 || ^15.0.0-0 || ^16.0.0-0",
     "react-dom": "^0.14.0 || ^15.0.0-0 || ^16.0.0-0",
     "redux": "^2.0.0 || ^3.0.0"
-  },
-  "dependencies": {
-    "reflexbox": "^2.2.3"
   }
 }
