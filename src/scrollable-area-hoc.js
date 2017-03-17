@@ -6,15 +6,20 @@ export default (Component) => {
     constructor(props) {
       super(props);
       this.getScrollContext = this.getScrollContext.bind(this);
+      this.state = { domNode: null };
     }
 
     getChildContext() {
       return { getScrollContext: this.getScrollContext };
     }
 
-    getScrollContext() {
+    componentDidMount() {
       // eslint-disable-next-line react/no-find-dom-node
-      return ReactDOM.findDOMNode(this);
+      this.state.domNode = ReactDOM.findDOMNode(this);
+    }
+
+    getScrollContext() {
+      return this.state.domNode;
     }
 
     render() {

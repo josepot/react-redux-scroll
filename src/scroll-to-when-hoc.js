@@ -36,21 +36,28 @@ export default (
   class Scrollable extends React.Component {
     constructor(props, context) {
       super(props, context);
-      const { getScrollContext = () => window } = context;
       this.check = this.check.bind(this);
-      this.getDomEl = this.getDomEl.bind(this);
       this.state = {
-        subscription: subscribe(
-          this.check, this.getDomEl, getScrollContext(), onEnd, scrollOptions),
+        subscription: Function.prototype,
       };
+    }
+
+    componentDidMount() {
+      this.state.subscription = subscribe(
+        this.check,
+        // eslint-disable-next-line react/no-find-dom-node
+        ReactDOM.findDOMNode(this),
+        (
+          this.context.getScrollContext &&
+          this.context.getScrollContext.bind(this.context)
+        ) || (() => window),
+        onEnd,
+        scrollOptions
+      );
     }
 
     componentWillUnmount() {
       this.state.subscription();
-    }
-
-    getDomEl() {
-      return ReactDOM.findDOMNode(this); // eslint-disable-line react/no-find-dom-node
     }
 
     check(action, state, prevState) {

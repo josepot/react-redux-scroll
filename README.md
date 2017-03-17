@@ -119,8 +119,7 @@ const isParagraphSelected = (action, props) => (
 );
 
 const ScrollableParagraph = scrollToWhen(
-  isParagraphSelected,
-  { excludedProps: ['id'] }
+  isParagraphSelected, null, null, ['id']
 )('p');
 
 const Paragraphs = ({ paragraphsData }) =>

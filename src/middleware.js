@@ -13,12 +13,12 @@ const clearSubscription = (id) => {
   delete subscriptions[id];
 };
 
-export const subscribe = (check, getDomEl, context, onEnd, scrollOptions) => {
+export const subscribe = (check, domEl, getContext, onEnd, scrollOptions) => {
   const subscriptionId = idsManager.getNewId();
   subscriptions[subscriptionId] = {
     check,
-    getDomEl,
-    context,
+    domEl,
+    getContext,
     onEnd,
     scrollOptions,
   };
@@ -35,17 +35,17 @@ const emit = (action, state, prevState) => {
     .filter(({ options }) => !!options)
     .forEach(({ key, options }) => {
       const subscription = subscriptions[key];
-      if (takenContexts.has(subscription.context) && !isProd) {
+      if (takenContexts.has(subscription.getContext()) && !isProd) {
         console.warn( // eslint-disable-line no-console
           'A component was prevented from scrolling as a result of the ' +
           'lastest action because another scroll was triggered ' +
           'for the same context.'
         );
       } else {
-        takenContexts.add(subscription.context);
+        takenContexts.add(subscription.getContext());
         subscription.cancelScroll = scrollTo(
-          subscription.getDomEl(),
-          subscription.context,
+          subscription.domEl,
+          subscription.getContext(),
           (canceled) => {
             subscription.cancelScroll = undefined;
             (options.onEnd || subscription.onEnd)(dispatch, canceled);
