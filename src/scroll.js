@@ -92,12 +92,12 @@ export default (
       xAlignment === 'LEFT'  ? targetRect.left : // eslint-disable-line no-multi-spaces
       xAlignment === 'RIGHT' ? targetRect.right - contextRect.width :
                                contextRect.left
-    ) + from.x + xMargin) - contextRect.left,
+    ) + from.x) - (contextRect.left + xMargin),
     y: ((
       yAlignment === 'TOP'    ? targetRect.top : // eslint-disable-line no-multi-spaces
       yAlignment === 'BOTTOM' ? targetRect.bottom - contextRect.height :
                                 contextRect.top
-    ) + from.y + yMargin) - contextRect.top,
+    ) + from.y) - (contextRect.top + yMargin),
   };
 
   const scrollTo = context === window ?

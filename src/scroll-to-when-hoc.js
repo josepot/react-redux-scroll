@@ -65,10 +65,8 @@ export default (
     }
 
     render() {
-      const newProps = Object
-        .keys(this.props)
-        // eslint-disable-next-line no-param-reassign
-        .reduce((res, key) => { res[key] = this.props[key]; return res; }, {});
+      const newProps = excludedProps.length > 0 ?
+        { ...this.props } : this.props;
       excludedProps.forEach(key => delete newProps[key]);
       return <Component {...newProps} />;
     }
