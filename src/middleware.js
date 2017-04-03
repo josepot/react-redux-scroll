@@ -7,9 +7,11 @@ const subscriptions = {};
 const isProd = process.env.NODE_ENV === 'production';
 
 const clearSubscription = (id) => {
-  if (subscriptions[id].cancelScroll) subscriptions[id].cancelScroll();
+  if (subscriptions[id].running) subscriptions[id].cancelScroll();
   delete subscriptions[id];
 };
+
+const setRunning = (id, value) => { subscriptions[id].running = value; };
 
 export const subscribe = (check, domEl, getContext, onEnd, scrollOptions) => {
   // eslint-disable-next-line no-plusplus
@@ -19,6 +21,7 @@ export const subscribe = (check, domEl, getContext, onEnd, scrollOptions) => {
     domEl,
     getContext,
     onEnd,
+    running: false,
     scrollOptions,
   };
   return () => clearSubscription(subscriptionId);
@@ -34,22 +37,23 @@ const emit = (action, state, prevState) => {
     .filter(({ options }) => !!options)
     .forEach(({ key, options }) => {
       const subscription = subscriptions[key];
-      if (takenContexts.has(subscription.getContext()) && !isProd) {
-        console.warn( // eslint-disable-line no-console
-          'A component was prevented from scrolling as a result of the ' +
-          'lastest action because another scroll was triggered ' +
-          'for the same context.'
-        );
-      } else {
+      if (!takenContexts.has(subscription.getContext())) {
         takenContexts.add(subscription.getContext());
+        setRunning(key, true);
         subscription.cancelScroll = scrollTo(
           subscription.domEl,
           subscription.getContext(),
           (canceled) => {
-            subscription.cancelScroll = undefined;
+            setRunning(key, false);
             (options.onEnd || subscription.onEnd)(dispatch, canceled);
           },
           { ...(subscription.scrollOptions), ...(options.scrollOptions || {}) }
+        );
+      } else if (!isProd) {
+        console.warn( // eslint-disable-line no-console
+          'A component was prevented from scrolling as a result of the ' +
+          'lastest action because another scroll was triggered ' +
+          'for the same context.'
         );
       }
     });
