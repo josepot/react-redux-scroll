@@ -112,6 +112,7 @@ export default scrollableArea(() =>
 ```js
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { scrollToWhen } from 'react-redux-scroll';
 import { PARAGRAPH_SELECTED } from 'action-types';
 
