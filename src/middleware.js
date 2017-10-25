@@ -59,12 +59,15 @@ const emit = (action, state, prevState) => {
     });
 };
 
-export default () => (store) => {
-  dispatch = store.dispatch.bind(store);
-  return next => (action) => {
-    const prevState = store.getState();
-    const result = next(action);
-    emit(action, store.getState(), prevState);
-    return result;
-  };
-};
+export default () => (process.env.IS_SSR
+  ? () => next => action => next(action)
+  : (store) => {
+    dispatch = store.dispatch.bind(store);
+    return next => (action) => {
+      const prevState = store.getState();
+      const result = next(action);
+      emit(action, store.getState(), prevState);
+      return result;
+    };
+  }
+);

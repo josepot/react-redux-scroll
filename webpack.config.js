@@ -13,7 +13,7 @@ const plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      HAS_SSR: JSON.stringify(process.env.HAS_SSR),
+      IS_SSR: JSON.stringify(process.env.IS_SSR),
     },
   }),
 ];

@@ -22,7 +22,7 @@ const getMatcher = (pattern) => {
   );
 };
 
-export default (
+const scrollToWhen = (
   pattern,
   onEnd,
   scrollOptions,
@@ -77,3 +77,9 @@ export default (
 
   return Scrollable;
 };
+
+export default (pattern, onEnd, scrollOptions, excludedProps) => (
+  process.env.IS_SSR
+    ? x => x
+    : scrollToWhen(pattern, onEnd, scrollOptions, excludedProps)
+);

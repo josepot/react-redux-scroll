@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 export default (Component) => {
+  if (process.env.IS_SSR) return Component;
+
   class ScrollableArea extends React.Component {
     constructor(props) {
       super(props);

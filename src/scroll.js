@@ -37,13 +37,13 @@ const getCurrentPosition = (from, to, startTime, duration, fn) => {
   };
 };
 
-const requestAnimationFrame = window.requestAnimationFrame ||
+const requestAnimationFrame = animationFn => (window.requestAnimationFrame ||
   window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
-  (fn => window.setTimeout(fn, 20));
+  (fn => window.setTimeout(fn, 20)))(animationFn);
 
-const cancelAnimationFrame = window.cancelAnimationFrame ||
+const cancelAnimationFrame = animationId => (window.cancelAnimationFrame ||
   window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
-  (id => window.clearTimeout(id));
+  (id => window.clearTimeout(id)))(animationId);
 
 const clearEntry = (context, isCancellation) => {
   const { animationId, onEnd } = onGoingScrolls.get(context);
@@ -61,7 +61,7 @@ const getEntity = (context, onEnd) => {
 
 export default (
   target,
-  context = window,
+  ctx,
   onEnd = () => null,
   {
     duration = 500,
@@ -72,6 +72,7 @@ export default (
     yMargin = 0,
   } = {}
 ) => {
+  const context = ctx || window;
   const entity = getEntity(context, onEnd);
 
   const from = context === window ?

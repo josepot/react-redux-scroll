@@ -213,7 +213,7 @@ It returns a Higher Order React Component Function that creates a ScrollableArea
 
 ### Is there an easy way to disable this library for the SSR build?
 
-Setting the env variable `HAS_SSR` to `true` will accomplish that.
+Setting the env variable `IS_SSR` to `true` will accomplish that.
 
 ### - What happens when more than one scroll tries to take place as a result of the latest action that was dispatched?
 
