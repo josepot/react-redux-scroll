@@ -1,9 +1,5 @@
-const target = process.env.HAS_SSR ? 'server' : 'browser';
-
-const {
-  createScrollMiddleware,
-  scrollableArea,
-  scrollToWhen,
-} = require(`./index.${target}.js`); // eslint-disable-line import/no-dynamic-require
+import createScrollMiddleware from './middleware';
+import scrollToWhen from './scroll-to-when-hoc';
+import scrollableArea from './scrollable-area-hoc';
 
 export { createScrollMiddleware, scrollableArea, scrollToWhen };
