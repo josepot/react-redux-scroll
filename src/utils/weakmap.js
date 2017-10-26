@@ -32,4 +32,11 @@ function CrappyWeakmap() {
   this.has = key => Boolean(key[id] && key[id].key === key);
 }
 
-export default WeakMap || CrappyWeakmap;
+let toExport; // eslint-disable-line
+try {
+  toExport = WeakMap;
+} catch (e) {
+  toExport = CrappyWeakmap;
+}
+
+export default toExport;
