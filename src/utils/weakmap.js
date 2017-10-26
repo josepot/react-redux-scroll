@@ -32,4 +32,4 @@ function CrappyWeakmap() {
   this.has = key => Boolean(key[id] && key[id].key === key);
 }
 
-export default window.WeakMap || CrappyWeakmap;
+export default WeakMap || CrappyWeakmap;

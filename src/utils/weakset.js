@@ -7,4 +7,11 @@ function CrappyWeakSet() {
   this.has = val => weakMap.has(val);
 }
 
-export default window.WeakSet || CrappyWeakSet;
+let toExport; // eslint-disable-line
+try {
+  toExport = WeakSet;
+} catch (e) {
+  toExport = CrappyWeakSet;
+}
+
+export default toExport;
