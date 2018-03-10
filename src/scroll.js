@@ -90,11 +90,13 @@ export default (
 
   const to = {
     x: ((
+      xAlignment === 'CENTER' ? targetRect.left + ((targetRect.width - contextRect.width) / 2) :
       xAlignment === 'LEFT'  ? targetRect.left : // eslint-disable-line no-multi-spaces
       xAlignment === 'RIGHT' ? targetRect.right - contextRect.width :
                                contextRect.left
     ) + from.x) - (contextRect.left + xMargin),
     y: ((
+      yAlignment === 'CENTER' ? targetRect.top + ((targetRect.height - contextRect.height) / 2) :
       yAlignment === 'TOP'    ? targetRect.top : // eslint-disable-line no-multi-spaces
       yAlignment === 'BOTTOM' ? targetRect.bottom - contextRect.height :
                                 contextRect.top

@@ -196,9 +196,9 @@ If specified further customizes the behavior of the scroll. The possible options
       * EASE_IN_OUT_QUART
     - If a function: it takes one argument `t` which is a decimal value between 0 and 1 (including both 0 and 1) that represents the proportional amount of time that has passed since the motion started. This function is supposed to returs a value between 0 and 1 that represents the proportional distance that has been completed in `t` time. The only conditions are that if `t` is zero the return value must be zero and that if `t` is 1 the return value must be 1 too.
     - Defaults to: `EASE_IN_QUAD`.
-  - `[ xAlignment ]` (String): Either `LEFT` or `RIGHT`, pass `null` or `undefined` if you don't want for the scroll function to change the x position. Defaults to `null`.
+  - `[ xAlignment ]` (String): Either `LEFT`, `CENTER` or `RIGHT`, pass `null` or `undefined` if you don't want for the scroll function to change the x position. Defaults to `null`. If you want a horizontal scroll set this to any of the possible values and the yAlignment to `null`.
   - `[ xMargin ]` (Number): Margin in pixels to the x alignment. Defaults to 0.
-  - `[ yMargin ]` (String): Either `TOP` or `BOTTOM`, pass `null` or `undefined` if you don't want for the scroll function to change the x position. Defaults to `null`.
+  - `[ yAlignment ]` (String): Either `TOP`, `CENTER` or `BOTTOM`, pass `null` or `undefined` if you don't want for the scroll function to change the y position. Defaults to `TOP`.
   - `[ yMargin ]` (Number): Margin in pixels to the y alignment. Defaults to 0.
 
 #### - `[ excludeProps ]` (*Array*):
