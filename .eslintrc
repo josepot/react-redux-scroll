@@ -1,26 +1,33 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:react/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
   "env": {
-    "browser": true
+    "es6": true,
+    "browser": true,
+    "mocha": true,
+    "node": true
   },
   "rules": {
-    "comma-dangle": ["error", "always-multiline"],
-    "max-len": ["error", {
-      "code": 80,
-      "ignoreComments": true,
-      "ignoreTemplateLiterals": true,
-      "ignoreUrls": true,
-      "ignoreTrailingComments": true
-    }],
-    "react/jsx-filename-extension": 0,
-    "react/forbid-prop-types": 0,
-    "no-nested-ternary": 0,
-    "no-underscore-dangle": 0,
+    "valid-jsdoc": 2,
+    "react/jsx-uses-react": 1,
+    "react/jsx-no-undef": 2,
+    "react/jsx-wrap-multilines": 2,
+    "react/no-string-refs": 0
   },
-  "settings": {
-    "import/resolver": {
-      "babel-module": {}
-    }
-  }
+  "plugins": [
+    "import",
+    "react"
+  ]
 }

@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import hoistStatics from 'hoist-non-react-statics';
 import ReactDOM from 'react-dom';
 
-export default (Component) => {
+export default Component => {
   if (process.env.IS_SSR) return Component;
 
   class ScrollableArea extends React.Component {
     constructor(props) {
       super(props);
       this.getScrollContext = this.getScrollContext.bind(this);
-      this.state = { domNode: null };
+      this._domNode = null;
     }
 
     getChildContext() {
@@ -18,21 +19,21 @@ export default (Component) => {
 
     componentDidMount() {
       // eslint-disable-next-line react/no-find-dom-node
-      this.state.domNode = ReactDOM.findDOMNode(this);
+      this._domNode = this._domNode || ReactDOM.findDOMNode(this);
     }
 
     getScrollContext() {
-      return this.state.domNode;
+      return this._domNode;
     }
 
     render() {
-      return <Component {...this.props} />;
+      return <Component ref={x => (this._domNode = x)} {...this.props} />;
     }
   }
 
   ScrollableArea.childContextTypes = {
-    getScrollContext: PropTypes.func,
+    getScrollContext: PropTypes.func
   };
 
-  return ScrollableArea;
+  return hoistStatics(ScrollableArea, Component);
 };

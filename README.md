@@ -12,7 +12,7 @@ Scroll management library for react-redux apps.
   * [Complete Examples](#complete-examples)
 * [API](#api)
   * [`createScrollMiddleware()`](#createscrollmiddleware)
-  * [`scrollToWhen(pattern, [onEnd], [scrollOptions], [excludeProps])`](#scrolltowhenpattern-onend-scrolloptions-excludeprops)
+  * [`scrollToWhen({pattern, [onEnd], [scrollOptions], [excludeProps]})`](#scrolltowhenpattern-onend-scrolloptions-excludeprops)
   * [`scrollableArea`](#scrollablearea)
 * [FAQ](#faq)
 * [Rationale](#rationale)
@@ -82,7 +82,8 @@ export default () =>
 
 Now, lets pretend that the `FancyForm` and the `ErrorMessages` are inside
 an `overflow: scroll` element. Therefore we want the scroll to happen for
-that "overflowed" element, instead of the `window`:
+that "overflowed" element, instead of the `window`. To do so, we will use
+the `scrollableArea` enhancer:
 
 ```js
 import React from 'react';
@@ -91,11 +92,13 @@ import ErrorMessages from './ErrorMessages';
 import FancyForm from './FancyForm';
 import { ERRORS_REPORTED } from 'action-types';
 
+const ScrollableDiv = scrollableArea('div');
+
 const ScrollableErrorMessages =
   scrollToWhen(ERRORS_REPORTED)(ErrorMessages);
 
-export default scrollableArea(() =>
-  <div
+export default () => (
+  <ScrollableDiv
     style={{
       overflow: 'scroll',
       width: '400px',
@@ -104,7 +107,8 @@ export default scrollableArea(() =>
   >
     <ScrollableErrorMessages />
     <FancyForm />
-  </div>);
+  </ScrollableDiv>
+);
 ```
 
 ### Intermediate
@@ -119,9 +123,10 @@ const isParagraphSelected = (action, props) => (
   action.type === SCROLL_TO_PARAGRAPH && props.id = action.paragraphId
 );
 
-const ScrollableParagraph = scrollToWhen(
-  isParagraphSelected, null, null, ['id']
-)('p');
+const ScrollableParagraph = scrollToWhen({
+  pattern: isParagraphSelected,
+  excludeProps: ['id']
+})('p');
 
 const Paragraphs = ({ paragraphsData }) =>
   <div>
@@ -144,28 +149,21 @@ export default Paragraphs;
 
 ### Complete Examples
 
-There are 2 complete examples in this repo that take advantage of all the different usages of the API:
+There are some examples in this repo that take advantage of all the different usages of the API:
 
 - [paragraphs](https://github.com/josepot/react-redux-scroll/tree/master/examples/paragraphs): It's a pretty basic one based on the code above.
 - [lottery](https://github.com/josepot/react-redux-scroll/tree/master/examples/lottery): This one is more advanced: it demonstarates how to use multiple ScrollAreas and having more than one scroll happneing at the same time.
-
 In order to try the examples, clone this repo, go the example folder that you want to try and do an `npm install`, `npm start`. For example:
-
-```
-git clone git@github.com:josepot/react-redux-scroll.git
-cd react-redux-scroll/examples/lottery
-npm install
-npm start
-```
+- [fiddler](https://github.com/josepot/react-redux-scroll/tree/master/examples/fiddler): A fiddler of the different `scrollOptions`.
 
 ## API
 
 ### `createScrollMiddleware()`
 It returns a [redux middleware](http://redux.js.org/docs/advanced/Middleware.html).
 
-### `scrollToWhen(pattern, [onEnd], [scrollOptions], [excludeProps])`
+### `scrollToWhen({pattern, [onEnd], [scrollOptions], [excludeProps]})`
 
-It returns a Higher Order React Component Function that will trigger scroll to the provided component when the pattern matches the dispatched action.
+It returns a Higher Order React Component Function that will trigger scroll to the provided component when the pattern matches the dispatched 
 
 **Arguments**
 
@@ -249,13 +247,9 @@ indicates whether or not the scroll got canceled.
 
 Yes.
 
-### - How many dependencies does this library have?
+### - What's the size of this library?
 
-Zero.
-
-### - What's the minified size of this library?
-
-10Kb.
+Without its peer dependencies, the gzipped size is < 5Kb.
 
 ## Rationale
 
