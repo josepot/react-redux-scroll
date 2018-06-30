@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+import hoistStatics from 'hoist-non-react-statics';
 import { subscribe } from './middleware';
 
-const getMatcher = (pattern) => {
+const getMatcher = pattern => {
   const patternType = typeof pattern;
   if (patternType === 'string') return ({ type }) => type === pattern;
   if (patternType === 'function') return pattern;
@@ -22,43 +23,52 @@ const getMatcher = (pattern) => {
   );
 };
 
-const scrollToWhen = (
-  pattern,
-  onEnd,
-  scrollOptions,
-  excludedProps,
-) => (Component) => {
-  onEnd = onEnd || Function.prototype; // eslint-disable-line no-param-reassign
-  scrollOptions = scrollOptions || {}; // eslint-disable-line no-param-reassign
-  excludedProps = excludedProps || []; // eslint-disable-line no-param-reassign
+const getArgs = args => {
+  if (args.length === 0)
+    throw new Error('scrollToWhen HOC expects at least 1 argument');
+  if (args.length > 1) return args;
+  if (typeof args[0] !== 'object') return args;
+  return [
+    args[0].pattern,
+    args[0].onEnd,
+    args[0].scrollOptions,
+    args[0].excludedProps
+  ];
+};
+
+export default (...args) => Component => {
+  if (process.env.IS_SSR) return Component;
+  const [
+    pattern,
+    onEnd = Function.prototype,
+    scrollOptions = {},
+    excludedProps = []
+  ] = getArgs(args).map(x => (x === null ? undefined : x));
 
   const matcher = getMatcher(pattern);
 
   class Scrollable extends React.Component {
     constructor(props, context) {
       super(props, context);
+      this._domNode = null;
       this.check = this.check.bind(this);
-      this.state = {
-        subscription: Function.prototype,
-      };
+      this.subscription = Function.prototype;
     }
 
     componentDidMount() {
-      this.state.subscription = subscribe(
+      // eslint-disable-next-line react/no-find-dom-node
+      this._domNode = this._domNode || ReactDOM.findDOMNode(this);
+      this.subscription = subscribe(
         this.check,
-        // eslint-disable-next-line react/no-find-dom-node
-        ReactDOM.findDOMNode(this),
-        (
-          this.context.getScrollContext &&
-          this.context.getScrollContext.bind(this.context)
-        ) || (() => window),
+        this._domNode,
+        this.context.getScrollContext || (() => window),
         onEnd,
         scrollOptions
       );
     }
 
     componentWillUnmount() {
-      this.state.subscription();
+      this.subscription();
     }
 
     check(action, state, prevState) {
@@ -66,20 +76,14 @@ const scrollToWhen = (
     }
 
     render() {
-      const newProps = excludedProps.length > 0 ?
-        { ...this.props } : this.props;
+      const newProps =
+        excludedProps.length > 0 ? { ...this.props } : this.props;
       excludedProps.forEach(key => delete newProps[key]);
-      return <Component {...newProps} />;
+      return <Component ref={x => (this._domNode = x)} {...newProps} />;
     }
   }
 
   Scrollable.contextTypes = { getScrollContext: PropTypes.func };
 
-  return Scrollable;
+  return hoistStatics(Scrollable, Component);
 };
-
-export default (pattern, onEnd, scrollOptions, excludedProps) => (
-  process.env.IS_SSR
-    ? x => x
-    : scrollToWhen(pattern, onEnd, scrollOptions, excludedProps)
-);
