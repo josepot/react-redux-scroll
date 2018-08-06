@@ -120,7 +120,7 @@ import { scrollToWhen } from 'react-redux-scroll';
 import { PARAGRAPH_SELECTED } from 'action-types';
 
 const isParagraphSelected = (action, props) => (
-  action.type === SCROLL_TO_PARAGRAPH && props.id = action.paragraphId
+  action.type === SCROLL_TO_PARAGRAPH && props.id === action.paragraphId
 );
 
 const ScrollableParagraph = scrollToWhen({
