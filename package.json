@@ -1,6 +1,6 @@
 {
   "name": "react-redux-scroll",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Manage the scrolls of your React app through your redux-actions",
   "keywords": [
     "react",
