@@ -7,13 +7,14 @@ export const TIMING_FUNCTIONS = {
   EASE_IN_QUAD: t => t * t,
   EASE_OUT_QUAD: t => t * (2 - t),
   EASE_IN_OUT_QUAD: t => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
-  EASE_IN_CUBIC: t => Math.pow(t,  3),
-  EASE_OUT_CUBIC: t => Math.pow((t - 1), 3) + 1,
+  EASE_IN_CUBIC: t => Math.pow(t, 3),
+  EASE_OUT_CUBIC: t => Math.pow(t - 1, 3) + 1,
   EASE_IN_OUT_CUBIC: t =>
     t < 0.5 ? 4 * Math.pow(t, 3) : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
   EASE_IN_QUART: t => Math.pow(t, 4),
-  EASE_OUT_QUART: t => 1 - Math.pow((t - 1), 4),
-  EASE_IN_OUT_QUART: t => (t < 0.5 ? 8 * Math.pow(t, 4) : 1 - 8 * Math.pow((t - 1), 4))
+  EASE_OUT_QUART: t => 1 - Math.pow(t - 1, 4),
+  EASE_IN_OUT_QUART: t =>
+    t < 0.5 ? 8 * Math.pow(t, 4) : 1 - 8 * Math.pow(t - 1, 4)
 };
 
 export const ALIGNMENTS = Object.freeze({
