@@ -89,7 +89,7 @@
     "react-test-renderer": "^16.6.3",
     "redux": "^4.0.1",
     "rimraf": "^2.6.2",
-    "rollup": "^0.61.1",
+    "rollup": "^0.63.3",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^3.4.0",
