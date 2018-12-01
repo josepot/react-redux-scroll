@@ -105,20 +105,20 @@ export default (
       (xAlignment === ALIGNMENTS.CENTER
         ? targetRect.left + (targetRect.width - contextRect.width) / 2
         : xAlignment === ALIGNMENTS.LEFT
-          ? targetRect.left // eslint-disable-line no-multi-spaces
-          : xAlignment === ALIGNMENTS.RIGHT
-            ? targetRect.right - contextRect.width
-            : contextRect.left) +
+        ? targetRect.left // eslint-disable-line no-multi-spaces
+        : xAlignment === ALIGNMENTS.RIGHT
+        ? targetRect.right - contextRect.width
+        : contextRect.left) +
       from.x -
       (contextRect.left + xMargin),
     y:
       (yAlignment === ALIGNMENTS.CENTER
         ? targetRect.top + (targetRect.height - contextRect.height) / 2
         : yAlignment === ALIGNMENTS.TOP
-          ? targetRect.top // eslint-disable-line no-multi-spaces
-          : yAlignment === ALIGNMENTS.BOTTOM
-            ? targetRect.bottom - contextRect.height
-            : contextRect.top) +
+        ? targetRect.top // eslint-disable-line no-multi-spaces
+        : yAlignment === ALIGNMENTS.BOTTOM
+        ? targetRect.bottom - contextRect.height
+        : contextRect.top) +
       from.y -
       (contextRect.top + yMargin)
   };
